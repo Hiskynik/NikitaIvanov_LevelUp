@@ -1,13 +1,12 @@
 package ru.levelp.at.homework2;
 
 public class IsHappy {
-    public static void main(String[] arts) {
-        System.out.println("Этот номер счастливый?:" + happy(231132));
 
-        System.out.println("Этот номер счастливый?:" + happy(123456));
-    }
+    public static boolean happy(int number) {
 
-    private static boolean happy(int number) {
+        if (number < 0) {
+            throw new IllegalArgumentException("Номер билета не может быть отрицательным");
+        }
         if ((number > 999999) || (number < 100001)) {
             return false;
         }
@@ -20,5 +19,10 @@ public class IsHappy {
         int n6 = number % 10;
 
         return (n1 + n2 + n3) == (n4 + n5 + n6);
+    }
+
+    public static void main(String[] arts) {
+        System.out.println("Этот номер счастливый?:" + happy(321123));
+
     }
 }

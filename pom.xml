@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.levelp.at</groupId>
@@ -17,18 +17,76 @@
         <checkstyle.version>10.3.3</checkstyle.version>
 
         <maven-checkstyle-plugin.version>3.2.0</maven-checkstyle-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
+        <annotations.version>3.2.1</annotations.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-io.version>2.11.0</commons-io.version>
+     <!--   <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
+        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+        <maven-clean-plugin.version>2.5</maven-clean-plugin.version>
+        <maven-install-plugin.version>2.4</maven-install-plugin.version> -->
         <testng.version>7.7.1</testng.version>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>negative_suite</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <suite.file>
+                    ${project.basedir}/src/main/resources/ru.levelp.at.homework2.suite/NegativeSuite.xml
+                </suite.file>
+            </properties>
+
+        </profile>
+
+        <profile>
+            <id>positive_suite</id>
+            <properties>
+                <suite.file>
+                    ${project.basedir}/src/main/resources/ru.levelp.at.homework2.suite/PositiveSuite.xml
+                </suite.file>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>all_suite</id>
+            <properties>
+                <suite.file>
+                    ${project.basedir}/src/main/resources/ru.levelp.at.homework2.suite/IsHappySuite.xml
+                </suite.file>
+            </properties>
+        </profile>
+
+    </profiles>
     <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
-<dependencies>
-    <!-- https://mvnrepository.com/artifact/org.testng/testng -->
-    <dependency>
-        <groupId>org.testng</groupId>
-        <artifactId>testng</artifactId>
-        <version>${testng.version}</version>
-        <scope>test</scope>
-    </dependency>
-</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+            <scope>compile</scope> <!-- можно не указывать, compile значение по умолчанию для тэга scope -->
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${commons-collections4.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.testng/testng -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -63,6 +121,46 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>${suite.file}</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+  <!--          <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${maven-clean-plugin.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>${maven-install-plugin.version}</version>
+            </plugin> -->
+
         </plugins>
     </build>
 
