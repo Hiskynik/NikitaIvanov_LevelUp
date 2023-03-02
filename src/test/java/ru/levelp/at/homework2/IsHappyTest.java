@@ -1,6 +1,9 @@
 package ru.levelp.at.homework2;
 
+import static org.testng.Assert.assertFalse;
+
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class IsHappyTest {
@@ -18,7 +21,7 @@ public class IsHappyTest {
     }
 
     @Test(expectedExceptions = {IllegalArgumentException.class},
-          expectedExceptionsMessageRegExp = "Номер билета не может быть отрицательным")
+          expectedExceptionsMessageRegExp = "Номер билета не может быть отрицательным!")
     public void shouldIsHappyNegativeNumber() {
         IsHappy ih = new IsHappy();
         Assert.assertFalse(ih.happy(-131321));
@@ -30,14 +33,18 @@ public class IsHappyTest {
         Assert.assertFalse(ih.happy(123456));
     }
 
-    @Test
-    public void shouldIsHappyReturnFalseNot6Digits() {
+    @DataProvider
+    public static Object[][] dataProvider() {
+        return new Object[][] {
+            {123456}, {1},
+            {12}, {123}, {1234},
+            {12345}, {1234567}};
+    }
+
+    @Test(dataProvider = "dataProvider", expectedExceptions = {IllegalArgumentException.class},
+          expectedExceptionsMessageRegExp = "Номер билета должен состоять из 6 цифр!")
+    public void shouldIsHappyReturnFalseIfNegative(int number) {
         IsHappy ih = new IsHappy();
-        Assert.assertFalse(IsHappy.happy(1234567));
-        Assert.assertFalse(IsHappy.happy(12345));
-        Assert.assertFalse(IsHappy.happy(1234));
-        Assert.assertFalse(IsHappy.happy(123));
-        Assert.assertFalse(IsHappy.happy(12));
-        Assert.assertFalse(IsHappy.happy(1));
+        assertFalse(ih.happy(number));
     }
 }
