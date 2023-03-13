@@ -14,7 +14,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-class OpenMailDeleteMailTest {
+class OpenMailDeleteMailTestIT {
     private static final String URL = "https://google.com";
     private static final String MAIL_RU = "https://mail.ru";
     private static WebDriver driver;

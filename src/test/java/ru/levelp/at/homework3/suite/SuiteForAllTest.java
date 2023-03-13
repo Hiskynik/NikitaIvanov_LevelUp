@@ -9,5 +9,5 @@ import org.junit.platform.suite.api.Suite;
 @IncludeTags({"mail", "delete", "topic"})
 @SelectPackages("ru.levelp.at.homework3")
 @IncludeClassNamePatterns(".*IT")
-class SuiteForAllTests {
+public class SuiteForAllTest {
 }
