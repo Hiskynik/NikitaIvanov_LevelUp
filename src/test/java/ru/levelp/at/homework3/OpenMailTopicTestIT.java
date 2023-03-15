@@ -3,44 +3,18 @@ package ru.levelp.at.homework3;
 import java.time.Duration;
 import java.util.List;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-class OpenMailTopicTestIT {
-    private static final String URL = "https://google.com";
-    private static final String MAIL_RU = "https://mail.ru";
-    private static WebDriver driver;
-    public WebDriverWait wait;
-
-    @BeforeEach
-    void setUp() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-
-        driver = new ChromeDriver(options);
-        driver.navigate().to(URL);
-        driver.navigate().to(MAIL_RU);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-    }
-
-    /*  @AfterEach
-    void tearDown() {
-        driver.quit();
-    }*/
+class OpenMailTopicTestIT extends BaseMailTest {
 
     @Test
     @Tag("topic")
-    void workWithTopicMail() throws InterruptedException {
-        Thread sleepUtils;
-        sleepUtils = new Thread();
+    void workWithTopicMail() {
 
         //нахожу кнопку для Авторизации в почте, нажимаю.
         WebElement loginButton = driver
@@ -77,20 +51,22 @@ class OpenMailTopicTestIT {
         var title = driver.getTitle();
         Assertions.assertThat(title).isEqualTo("Mail.ru: почта, поиск в интернете, новости, игры");
 
-        sleepUtils.sleep(3000);
-
         //перехожу во Все папки
-        wait.until(ExpectedConditions.elementToBeClickable(
+        WebDriverWait waitALLFolders = new WebDriverWait(driver, Duration.ofSeconds(10));
+        waitALLFolders.until(ExpectedConditions.elementToBeClickable(
             By.xpath("//*[@class = 'sidebar__header']//a[@title = 'Все папки']"))).click();
-        sleepUtils.sleep(3000);
+
         //перехожу в папку Тест
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath(
-                    "//div[@class='sidebar__full fn-enter']"
-                        + "//a[@class = 'nav__item nav__item_expanded_true "
-                        + "nav__item_child-level_0']")))
-            .click();
-        sleepUtils.sleep(3000);
+        WebDriverWait waitTestFolder = new WebDriverWait(driver, Duration.ofSeconds(10));
+        waitTestFolder.until(ExpectedConditions.elementToBeClickable(
+                          By.xpath(
+                              "//div[@class='sidebar__full fn-enter']"
+                                  + "//a[@class = 'nav__item nav__item_expanded_true "
+                                  + "nav__item_child-level_0']")))
+                      .click();
+
+        WebDriverWait waitTestFolder1 = new WebDriverWait(driver, Duration.ofSeconds(50));
+        waitTestFolder1.until(ExpectedConditions.titleContains("Test - Почта Mail.ru"));
 
         List<WebElement> mails = driver.findElements(By
             .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
@@ -100,19 +76,23 @@ class OpenMailTopicTestIT {
         System.out.println(topicTestMails + " - количество писем до сохранения в папку Тест");
 
         //перехожу в Отправленные
-        wait.until(ExpectedConditions.elementToBeClickable(
+        WebDriverWait waitSendingEmails1 = new WebDriverWait(driver, Duration.ofSeconds(50));
+        waitSendingEmails1.until(ExpectedConditions.elementToBeClickable(
             By.xpath("//*[contains(@class, 'nav__item') and contains(.,'Отправленные')]"))).click();
-        sleepUtils.sleep(3000);
+
+        WebDriverWait waitSendingEmails2 = new WebDriverWait(driver, Duration.ofSeconds(50));
+        waitSendingEmails2.until(ExpectedConditions.titleIs("Отправленные - Почта Mail.ru"));
+        //считаю отправленные
         List<WebElement> sendMails1 = driver.findElements(By
             .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
 
         //помещаю в переменную типа int, вывожу кол-во писем.
-        final int sentFolderMails = sendMails1.size();
-        System.out.println(sentFolderMails + " - количество писем до отправки в папке Отправленные");
+        final int a = sendMails1.size();
+        System.out.println(a + " - количество писем до отправки в папке Отправленные");
 
-        //нахожу кнопку для написания Нового письма, нажимаю.
+        //нахожу кнопку для Нового письма, нажимаю.
         driver.switchTo().defaultContent();
-        WebDriverWait waitButtonNewLetter = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait waitButtonNewLetter = new WebDriverWait(driver, Duration.ofSeconds(20));
         waitButtonNewLetter.until(ExpectedConditions.elementToBeClickable(By
                                .xpath("//*[@id='app-canvas']"
                                    + "//span[@class='compose-button__wrapper']")))
@@ -140,12 +120,12 @@ class OpenMailTopicTestIT {
                     .sendKeys(body);
 
         //Нажимаю на кнопку отправить.
-        WebDriverWait waitButtonSend = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait waitButtonSend = new WebDriverWait(driver, Duration.ofSeconds(50));
         waitButtonSend.until(ExpectedConditions.elementToBeClickable(By
                           .xpath(
                               "//div[@class='compose-app__compose']//button[@data-test-id='send']")))
                       .click();
-        sleepUtils.sleep(3000);
+
         //закрываю всплывашку
         WebDriverWait waitButtonClose = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitButtonClose.until(ExpectedConditions.elementToBeClickable(By
@@ -154,43 +134,45 @@ class OpenMailTopicTestIT {
                                    + "//span[@class='button2__wrapper button2__wrapper_centered']")))
                        .click();
 
-        //перехожу в Отправленные
-        wait.until(ExpectedConditions.elementToBeClickable(
-            By.xpath("//*[contains(@class, 'nav__item') and contains(.,'Отправленные')]"))).click();
-        sleepUtils.sleep(3000);
+        WebDriverWait waitSendingEmails3 = new WebDriverWait(driver, Duration.ofSeconds(100));
+        waitSendingEmails3.until(ExpectedConditions.titleIs("Отправленные - Почта Mail.ru"));
+
+        //считаю отправленные
         List<WebElement> mailsForSend = driver.findElements(By
             .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
-        sleepUtils.sleep(3000);
+
         //помещаю в переменную типа int, вывожу кол-во писем.
-        int sentFolderMailsAfterSending = mailsForSend.size();
-        System.out.println(sentFolderMailsAfterSending + " - количество писем после отправки в папке Отправленные");
-        int mySendLetter = 1;
+        final int b = mailsForSend.size();
+        System.out.println(b + " - количество писем после отправки в папке Отправленные");
+        final int mySendLetter = 1;
 
         //Проверяю, что в Отправленных стало больше на 1
-        Assertions.assertThat(sentFolderMails + mySendLetter).isEqualTo(sentFolderMailsAfterSending);
-        sleepUtils.sleep(3000);
+        Assertions.assertThat(a + mySendLetter).isEqualTo(b);
 
         //перехожу во Все папки
-        wait.until(ExpectedConditions.elementToBeClickable(
+        WebDriverWait waitALLFolders1 = new WebDriverWait(driver, Duration.ofSeconds(10));
+        waitALLFolders1.until(ExpectedConditions.elementToBeClickable(
             By.xpath("//*[@class = 'sidebar__header']//a[@title = 'Все папки']"))).click();
-        sleepUtils.sleep(3000);
-        wait.until(ExpectedConditions.elementToBeClickable(By
-            .xpath("//div[@class='sidebar__full fn-enter']"
-                + "//a[@class = 'nav__item nav__item_expanded_true "
-                + "nav__item_child-level_0']"))).click();
 
-        sleepUtils.sleep(3000);
+        //перехожу в папку Тест
+        WebDriverWait waitTestFolder2 = new WebDriverWait(driver, Duration.ofSeconds(10));
+        waitTestFolder2.until(ExpectedConditions.elementToBeClickable(
+                           By.xpath("//div[@class='sidebar__full fn-enter']"
+                               + "//a[@class = 'nav__item nav__item_expanded_true nav__item_child-level_0']")))
+                       .click();
+        WebDriverWait waitTestFolder3 = new WebDriverWait(driver, Duration.ofSeconds(50));
+        waitTestFolder3.until(ExpectedConditions.titleContains("Test - Почта Mail.ru"));
+        //считаю количество писем после отправки
         List<WebElement> mails1 = driver.findElements(By
             .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
 
-        sleepUtils.sleep(3000);
         //помещаю в переменную типа int, вывожу кол-во писем.
-        int topicTestMailsAfterSending = mails1.size();
+        final int topicTestMailsAfterSending = mails1.size();
         System.out.println(topicTestMailsAfterSending + " - количество писем после отправки в папке Тест");
-        int mySendTestLetter = 1;
-        sleepUtils.sleep(3000);
+        final int mySendTestLetter = 1;
+
         //Проверяю, что в папке Тест стало больше на 1
-        Assertions.assertThat(topicTestMails + mySendTestLetter).isEqualTo(topicTestMailsAfterSending);
+        Assertions.assertThat(topicTestMailsAfterSending - mySendTestLetter).isEqualTo(topicTestMails);
 
         //Перехожу в свое письмо в папке Тест.
         WebDriverWait waitMyDraft = new WebDriverWait(driver, Duration.ofSeconds(20));
@@ -223,12 +205,15 @@ class OpenMailTopicTestIT {
         Assertions.assertThat(body).isEqualTo("Hello,world!");
 
         //выхожу из почты
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[@id='ph-whiteline']//div[@data-testid='whiteline-account']")))
-            .click();
+        WebDriverWait waitProfile = new WebDriverWait(driver, Duration.ofSeconds(20));
+        waitProfile.until(ExpectedConditions.elementToBeClickable(
+                       By.xpath("//*[@id='ph-whiteline']//div[@data-testid='whiteline-account']")))
+                   .click();
 
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//div[@class='ph-accounts svelte-1labzyv']//div[@data-testid='whiteline-account-exit']")))
-            .click();
+        WebDriverWait waitExit = new WebDriverWait(driver, Duration.ofSeconds(20));
+        waitExit.until(ExpectedConditions.elementToBeClickable(
+                    By.xpath("//div[@class='ph-accounts svelte-1labzyv']//div[@data-testid='whiteline-account-exit']")))
+                .click();
     }
 }
+

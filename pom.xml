@@ -40,7 +40,7 @@
             <activeByDefault>true</activeByDefault>
         </activation>
         <properties>
-            <class.name> **/suiteForAllTests.class</class.name>
+            <class.name> **/*suiteForAllTests.class</class.name>
         </properties>
         </profile>
     </profiles>
@@ -150,7 +150,7 @@
             <configuration>
                 <includes>
                     <!--suppress UnresolvedMavenProperty -->
-                    <include>${class.name}</include>
+                    <include>${project.class.name}</include>
                 </includes>
             </configuration>
             <executions>

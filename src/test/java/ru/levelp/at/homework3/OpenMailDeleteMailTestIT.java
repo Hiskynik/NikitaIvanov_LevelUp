@@ -3,44 +3,18 @@ package ru.levelp.at.homework3;
 import java.time.Duration;
 import java.util.List;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-class OpenMailDeleteMailTestIT {
-    private static final String URL = "https://google.com";
-    private static final String MAIL_RU = "https://mail.ru";
-    private static WebDriver driver;
-    public WebDriverWait wait;
+class OpenMailDeleteMailTestIT extends BaseMailTest {
 
-    @BeforeEach
-    void setUp() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-
-        driver = new ChromeDriver(options);
-        driver.navigate().to(URL);
-        driver.navigate().to(MAIL_RU);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-    }
-
-    /*   @AfterEach
-       void tearDown() {
-           driver.quit();
-       }
-   */
     @Test
     @Tag("delete")
-    void workWithMailDeleteMail() throws InterruptedException {
-        Thread sleepUtils;
-        sleepUtils = new Thread();
+    void workWithMailDeleteMail() {
 
         //нахожу кнопку для Авторизации в почте, нажимаю.
         WebElement loginButton = driver
@@ -76,32 +50,39 @@ class OpenMailDeleteMailTestIT {
         //проверяю, что вошел по заголовку.
         var title = driver.getTitle();
         Assertions.assertThat(title).isEqualTo("Mail.ru: почта, поиск в интернете, новости, игры");
-        sleepUtils.sleep(3000);
+
         //перехожу в корзину
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[@id='sideBarContent']//a[@data-folder-link-id='500002']")))
-            .click();
-        sleepUtils.sleep(3000);
+        WebDriverWait waitBasket = new WebDriverWait(driver, Duration.ofSeconds(20));
+        waitBasket.until(ExpectedConditions.elementToBeClickable(
+                      By.xpath("//*[@id='sideBarContent']//a[@data-folder-link-id='500002']")))
+                  .click();
+
+        WebDriverWait waitTestFolder = new WebDriverWait(driver, Duration.ofSeconds(50));
+        waitTestFolder.until(ExpectedConditions.titleContains("Корзина - Почта Mail.ru"));
+
         //считаю количество писем в корзине
+
         List<WebElement> emailsInBasket = driver.findElements(By
             .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
 
         //помещаю в переменную типа int, вывожу кол-во писем.
         final int beforeDeleteEmails = emailsInBasket.size();
-        //System.out.println(BeforeDeleteEmails + " - количество писем корзине");
-        sleepUtils.sleep(3000);
+        System.out.println(beforeDeleteEmails + " - количество писем корзине");
+
         //перехожу во входящие
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[@id='sideBarContent']//a[@title = 'Входящие']")))
-            .click();
-        sleepUtils.sleep(3000);
+        WebDriverWait waitIncoming = new WebDriverWait(driver, Duration.ofSeconds(20));
+        waitIncoming.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("//*[contains(@class, 'nav__item') and contains(.,'Входящие')]"))).click();
+
+        WebDriverWait waitIncomingFolder = new WebDriverWait(driver, Duration.ofSeconds(50));
+        waitIncomingFolder.until(ExpectedConditions.titleContains("Входящие - Почта Mail.ru"));
         //проверяю количество писем во входящих стало.
         List<WebElement> emailsInTheInbox = driver.findElements(By
             .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
-        sleepUtils.sleep(3000);
+
         //помещаю в переменную типа int, вывожу кол-во писем.
         final int inboxEmails = emailsInTheInbox.size();
-        //System.out.println(inboxEmails + " - количество писем в папке Входящие");
+        System.out.println(inboxEmails + " - количество писем в папке Входящие");
 
         //нахожу кнопку для написания Нового письма, нажимаю.
         driver.switchTo().defaultContent();
@@ -138,7 +119,6 @@ class OpenMailDeleteMailTestIT {
                               "//div[@class='compose-app__compose']//button[@data-test-id='send']")))
                       .click();
 
-        sleepUtils.sleep(3000);
         //закрываю всплывашку
         WebDriverWait waitButtonClose = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitButtonClose.until(ExpectedConditions.elementToBeClickable(By
@@ -146,18 +126,27 @@ class OpenMailDeleteMailTestIT {
                                "//div[@class='layer-window__block']"
                                    + "//span[@class='button2__wrapper button2__wrapper_centered']")))
                        .click();
+        //перехожу во входящие
+        WebDriverWait waitIncoming1 = new WebDriverWait(driver, Duration.ofSeconds(20));
+        waitIncoming1.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("//*[contains(@class, 'nav__item') and contains(.,'Входящие')]"))).click();
 
-        sleepUtils.sleep(3000);
+        WebDriverWait waitIncoming2 = new WebDriverWait(driver, Duration.ofSeconds(20));
+        waitIncoming2.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("//*[contains(@class, 'nav__item') and contains(.,'Входящие')]"))).click();
+
+        WebDriverWait waitIncomingFolderAfter = new WebDriverWait(driver, Duration.ofSeconds(80));
+        waitIncomingFolderAfter.until(ExpectedConditions.titleContains("Входящие - Почта Mail.ru"));
+
         //считаю количество писем во входящих после отправки
-        sleepUtils.sleep(3000);
         List<WebElement> emailsInTheInboxAfterSend = driver.findElements(By
             .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
-        sleepUtils.sleep(3000);
+
         //помещаю в переменную типа int, вывожу кол-во писем.
-        int inboxEmailsAfterSend = emailsInTheInboxAfterSend.size();
-        //System.out.println(inboxEmailsAfterSend + " - количество писем после отправки в папке Входящие");
-        int mySendLetter = 1;
-        sleepUtils.sleep(3000);
+        final int inboxEmailsAfterSend = emailsInTheInboxAfterSend.size();
+        System.out.println(inboxEmailsAfterSend + " - количество писем после отправки в папке Входящие");
+        final int mySendLetter = 1;
+
         //Проверяю, что во входящих стало больше на 1
         Assertions.assertThat(inboxEmails + mySendLetter).isEqualTo(inboxEmailsAfterSend);
 
@@ -190,36 +179,40 @@ class OpenMailDeleteMailTestIT {
             .xpath("//div[@class='letter-calendar']")));
 
         Assertions.assertThat(body).isEqualTo("И снова заполняю тело");
-        sleepUtils.sleep(4000);
-        //удаляю письмо
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[@id='app-canvas']//span[@title='Удалить']")))
-            .click();
 
-        sleepUtils.sleep(5000);
+        //удаляю письмо
+        WebDriverWait waitEmailDelete = new WebDriverWait(driver, Duration.ofSeconds(20));
+        waitEmailDelete.until(ExpectedConditions.elementToBeClickable(
+                           By.xpath("//*[@id='app-canvas']//span[@title='Удалить']")))
+                       .click();
+
         //перехожу в корзину
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[@id='sideBarContent']//a[@data-folder-link-id='500002']")))
-            .click();
-        sleepUtils.sleep(3000);
+        WebDriverWait waitBasket2 = new WebDriverWait(driver, Duration.ofSeconds(20));
+        waitBasket2.until(ExpectedConditions.elementToBeClickable(
+                       By.xpath("//*[@id='sideBarContent']//a[@data-folder-link-id='500002']")))
+                   .click();
+        WebDriverWait waitTestFolder1 = new WebDriverWait(driver, Duration.ofSeconds(50));
+        waitTestFolder1.until(ExpectedConditions.titleContains("Корзина - Почта Mail.ru"));
+
         //считаю количество писем в корзине теперь
         List<WebElement> emailsInBasketAfter = driver.findElements(By
             .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
-        sleepUtils.sleep(3000);
+
         //помещаю в переменную типа int, вывожу кол-во писем.
-        int afterDeleteEmails = emailsInBasketAfter.size();
-        //System.out.println(AfterDeleteEmails + " - количество писем корзине теперь");
+        final int afterDeleteEmails = emailsInBasketAfter.size();
+        System.out.println(afterDeleteEmails + " - количество писем в корзине теперь");
 
         Assertions.assertThat(beforeDeleteEmails + mySendLetter).isEqualTo(afterDeleteEmails);
 
-        sleepUtils.sleep(3000);
         //выхожу из почты
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[@id='ph-whiteline']//div[@data-testid='whiteline-account']")))
-            .click();
+        WebDriverWait waitProfile = new WebDriverWait(driver, Duration.ofSeconds(20));
+        waitProfile.until(ExpectedConditions.elementToBeClickable(
+                       By.xpath("//*[@id='ph-whiteline']//div[@data-testid='whiteline-account']")))
+                   .click();
 
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//div[@class='ph-accounts svelte-1labzyv']//div[@data-testid='whiteline-account-exit']")))
-            .click();
+        WebDriverWait waitExit = new WebDriverWait(driver, Duration.ofSeconds(20));
+        waitExit.until(ExpectedConditions.elementToBeClickable(
+                    By.xpath("//div[@class='ph-accounts svelte-1labzyv']//div[@data-testid='whiteline-account-exit']")))
+                .click();
     }
 }
