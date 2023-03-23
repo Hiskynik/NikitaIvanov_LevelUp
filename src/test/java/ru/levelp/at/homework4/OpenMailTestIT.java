@@ -4,20 +4,23 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import ru.levelp.at.homework4.pages.IndexPageEmail;
-import ru.levelp.at.homework4.pages.LoginPage;
+import ru.levelp.at.homework4.pages.*;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.List;
 import java.util.Properties;
 
-
 public class OpenMailTestIT extends BaseMailTest {
-    private final LoginPage loginPage = new LoginPage(driver);
-    private final IndexPageEmail indexPageEmail = new IndexPageEmail(driver);
+
     private Properties properties;
+
+    public OpenMailTestIT() {
+    }
 
     @Override
     @BeforeEach
@@ -25,12 +28,16 @@ public class OpenMailTestIT extends BaseMailTest {
         super.setUp();
         properties = new Properties();
         try {
-            properties.load(this.getClass().getResourceAsStream("/src/test/properties/properties"));
-        } catch (
-                IOException e) {
+            properties.load(this.getClass().getClassLoader().getResourceAsStream("app.properties"));
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+    private final ThreadLocal<LoginPage> loginPage = ThreadLocal.withInitial(() -> new LoginPage(driver));
+    private final ThreadLocal<IndexPageEmail> indexPageEmail = ThreadLocal.withInitial(() -> new IndexPageEmail(driver));
+    private final ThreadLocal<NewLetterWindow> newLetterWindow = ThreadLocal.withInitial(() -> new NewLetterWindow(driver));
+    private final ThreadLocal<DraftsPage> draftsPage = ThreadLocal.withInitial(() -> new DraftsPage(driver));
 
     @Test
     @Tag("mail")
@@ -39,32 +46,69 @@ public class OpenMailTestIT extends BaseMailTest {
         var emailname = properties.getProperty("email.name");
         var emailpassword = properties.getProperty("email.password");
         var indexpagetitle = properties.getProperty("index.page.title");
+        var recipient = properties.getProperty("recipient");
+        var topic = properties.getProperty("topic");
+        var body = properties.getProperty("body");
 
-        loginPage.open();
-        loginPage.clickLoginButton();
-        loginPage.switchLoginFrame();
-        loginPage.fillEmailTextField(emailname);
-        loginPage.clickPasswordButton();
-        loginPage.fillPasswordTextField(emailpassword);
-        loginPage.clickEntranceButton();
+        loginPage.get().open();
+        loginPage.get().clickLoginButton();
+        loginPage.get().switchLoginFrame();
+        loginPage.get().fillEmailTextField(emailname);
+        loginPage.get().clickPasswordButton();
+        loginPage.get().fillPasswordTextField(emailpassword);
+        loginPage.get().clickEntranceButton();
         var title = driver.getTitle();
         Assertions.assertThat(title).isEqualTo(indexpagetitle);
-        indexPageEmail.clickSentButton();
-        WebDriverWait waitSendingEmails2 = new WebDriverWait(driver, Duration.ofSeconds(50));
-        waitSendingEmails2.until(ExpectedConditions.titleIs("Отправленные - Почта Mail.ru"));
+        indexPageEmail.get().clickSentButton();
+        WebDriverWait waitSendingEmails1 = new WebDriverWait(driver, Duration.ofSeconds(50));
+        waitSendingEmails1.until(ExpectedConditions.titleIs("Отправленные - Почта Mail.ru"));
+        List<WebElement> sendMails1 = driver.findElements(By.xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
+        final int numberOfLettersSend = sendMails1.size();
+        System.out.println(numberOfLettersSend + " - отправленных до");
+        indexPageEmail.get().clickDraftsButton();
+        List<WebElement> drafts = driver.findElements(By.xpath("//*[@id='app-canvas']//div[@class='llc__content']"));
+        final int numberOfLetterToSave = drafts.size();
+        System.out.println(numberOfLetterToSave + " - черновиков до");
+        indexPageEmail.get().clickNewLetterButton();
+        newLetterWindow.get().fillRecipientTextField(recipient);
+        newLetterWindow.get().fillTopicTextField(topic);
+        newLetterWindow.get().fillBodyTextField(body);
+        newLetterWindow.get().clickSaveButton();
+        newLetterWindow.get().clickCloseButton();
+        indexPageEmail.get().clickDraftsButton();
+        WebDriverWait waitDraftsEmails2 = new WebDriverWait(driver, Duration.ofSeconds(50));
+        waitDraftsEmails2.until(ExpectedConditions.titleIs("Черновики - Почта Mail.ru"));
+        List<WebElement> drafts1 = driver.findElements(By.xpath("//*[@id='app-canvas']//div[@class='llc__content']"));
+        int numberOfLetterAfterSave = drafts1.size();
+        System.out.println(numberOfLetterAfterSave + " - черновиков после");
+        int myLetter = 1;
+        Assertions.assertThat(numberOfLetterAfterSave - myLetter).isEqualTo(numberOfLetterToSave);
+        //draftsPage.clickMyDraft();
+
+        var actualRecipient = MyDraftWindow.getRecipientFieldText();
+        Assertions.assertThat(actualRecipient).isEqualTo(recipient);
+
+        var actualTopic = MyDraftWindow.getTopicFieldText();
+        Assertions.assertThat(actualTopic).isEqualTo(topic);
+
+        var actualBody = MyDraftWindow.getBodyFieldText();
+        Assertions.assertThat(actualBody).isEqualTo(body);
+
+
+
 
 /*
         WebElement loginButton = driver
                 .findElement(By.xpath("//*[contains(@class,'resplash-btn')]"));
         loginButton.click();
-        //нахожу фрейм, переключаюсь на него.
+        //?????? ?????, ???????????? ?? ????.
         WebElement frameElement = driver
                 .findElement(By.xpath("//*[contains(@class,'ag-popup__frame__layout__iframe')]"));
         driver.switchTo().frame(frameElement);
 
     }
 
-    //нахожу поле для ввода Логина, ввожу Логин почты.
+    //?????? ???? ??? ????? ??????, ????? ????? ?????.
     WebDriverWait waitUserName = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitUserName.until(ExpectedConditions.visibilityOfElementLocated(By
                 .xpath("//*[@id='login-content']//input[@name='username']")))
@@ -76,13 +120,13 @@ public class OpenMailTestIT extends BaseMailTest {
         loginButton.click();
     }
 
-    //нахожу кнопку для ввода пароля, нажимаю.
+    //?????? ?????? ??? ????? ??????, ???????.
     WebElement passwordButton = driver
             .findElement(By.xpath("//*[contains(@class,'submit-button-wrap')]"));
         passwordButton.click();
 
 
-    //нахожу поле пароля, ввожу его.
+    //?????? ???? ??????, ????? ???.
     WebDriverWait waitPassword = new WebDriverWait(driver, Duration.ofSeconds(20));
         waitPassword.until(ExpectedConditions.visibilityOfElementLocated(By
                 .xpath("//*[@id='login-content']//input[@name='password']")))
@@ -90,49 +134,47 @@ public class OpenMailTestIT extends BaseMailTest {
 
     sendKeys("Lomik2121!");
 
-    //нахожу кнопку для входа, нажимаю.
+    //?????? ?????? ??? ?????, ???????.
     WebElement gateButton = driver.findElement(By.xpath("//*[contains(@class,'submit-button')]"));
         gateButton.click();
 
-    //проверяю, что вошел по заголовку.
+    //????????, ??? ????? ?? ?????????.
     var title = driver.getTitle();
-        Assertions.assertThat(title).isEqualTo("Mail.ru: почта, поиск в интернете, новости, игры");
+        Assertions.assertThat(title).isEqualTo("Mail.ru: ?????, ????? ? ?????????, ???????, ????");
 
-    //перехожу в Отправленные
+    //???????? ? ????????????
     WebDriverWait waitSendingEmails1 = new WebDriverWait(driver, Duration.ofSeconds(50));
         waitSendingEmails1.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[contains(@class, 'nav__item') and contains(.,'Отправленные')]"))).
-
-    click();
+                By.xpath("//*[contains(@class, 'nav__item') and contains(.,'????????????')]"))).click();
 
     WebDriverWait waitSendingEmails2 = new WebDriverWait(driver, Duration.ofSeconds(50));
-        waitSendingEmails2.until(ExpectedConditions.titleIs("Отправленные - Почта Mail.ru"));
+        waitSendingEmails2.until(ExpectedConditions.titleIs("???????????? - ????? Mail.ru"));
 
     List<WebElement> sendMails1 = driver.findElements(By
             .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
 
-    //помещаю в переменную типа int, вывожу кол-во писем.
+    //??????? ? ?????????? ???? int, ?????? ???-?? ?????.
     final int numberOfLettersSend = sendMails1.size();
-    //System.out.println(numberOfLettersSend + " - количество писем до отправки в папке Отправленные");
+    //System.out.println(numberOfLettersSend + " - ?????????? ????? ?? ???????? ? ????? ????????????");
 
-    //перехожу в черновики
+    //???????? ? ?????????
     WebDriverWait waitButtonDrafts = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitButtonDrafts.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[contains(@class, 'nav__item') and contains(.,'Черновики')]"))).
+                By.xpath("//*[contains(@class, 'nav__item') and contains(.,'?????????')]"))).
 
     click();
 
     WebDriverWait waitDraftsEmails1 = new WebDriverWait(driver, Duration.ofSeconds(50));
-        waitDraftsEmails1.until(ExpectedConditions.titleIs("Черновики - Почта Mail.ru"));
+        waitDraftsEmails1.until(ExpectedConditions.titleIs("????????? - ????? Mail.ru"));
 
     List<WebElement> drafts = driver.findElements(By
             .xpath("//*[@id='app-canvas']//div[@class='llc__content']"));
 
-    //помещаю в переменную типа int, вывожу кол-во писем.
+    //??????? ? ?????????? ???? int, ?????? ???-?? ?????.
     final int numberOfLetterToSave = drafts.size();
-    //System.out.println(numberOfLetterToSave + " - количество писем до сохранения в папку Черновики");
+    //System.out.println(numberOfLetterToSave + " - ?????????? ????? ?? ?????????? ? ????? ?????????");
 
-    //нахожу кнопку для написания Нового письма, нажимаю.
+    //?????? ?????? ??? ????????? ?????? ??????, ???????.
         driver.switchTo().defaultContent();
     WebDriverWait waitButtonNewLetter = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitButtonNewLetter.until(ExpectedConditions.elementToBeClickable(By
@@ -141,42 +183,34 @@ public class OpenMailTestIT extends BaseMailTest {
 
     click();
 
-    //нахожу поле для заполнения Получателя, ввожу адрес эл.почты.
+    //?????? ???? ??? ?????????? ??????????, ????? ????? ??.?????.
     var recipient = "lvluptestqa@gmail.com";
     WebDriverWait waitFillRecipient = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitFillRecipient.until(ExpectedConditions.visibilityOfElementLocated(By
                 .xpath("//div[@class='compose-app__compose']//input[@type='text']")))
-                .
+                .sendKeys(recipient);
 
-    sendKeys(recipient);
-
-    //нахожу поле для заполнения Темы письма, ввожу Тему.
+    //?????? ???? ??? ?????????? ???? ??????, ????? ????.
     var topic = "New";
     WebDriverWait waitFillTopic = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitFillTopic.until(ExpectedConditions.visibilityOfElementLocated(By
                 .xpath("//div[@class='compose-app__compose']//input[@name='Subject']")))
-                .
+                .sendKeys(topic);
 
-    sendKeys(topic);
-
-    //нахожу поле для заполнения Тела письма, ввожу текст.
+    //?????? ???? ??? ?????????? ???? ??????, ????? ?????.
     var body = "Hello,world!";
     WebDriverWait waitFillBody = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitFillBody.until(ExpectedConditions.visibilityOfElementLocated(By
                 .xpath("//div[@class='compose-app__compose']//div[@role='textbox']")))
-                .
+                .sendKeys(body);
 
-    sendKeys(body);
-
-    //нахожу кнопку Сохранить, нажимаю.
+    //?????? ?????? ?????????, ???????.
     WebDriverWait waitButtonSave = new WebDriverWait(driver, Duration.ofSeconds(20));
         waitButtonSave.until(ExpectedConditions.elementToBeClickable(By
                 .xpath("//div[@class='compose-app__compose']//button[@type='button']")))
-                .
+                .click();
 
-    click();
-
-    //нахожу кнопку Закрыть, закрываю черновик.
+    //?????? ?????? ???????, ???????? ????????.
     WebDriverWait waitButtonExit = new WebDriverWait(driver, Duration.ofSeconds(30));
         waitButtonExit.until(ExpectedConditions.elementToBeClickable(By
                 .xpath(
@@ -186,31 +220,31 @@ public class OpenMailTestIT extends BaseMailTest {
 
     click();
 
-    //перехожу в черновики
+    //???????? ? ?????????
     WebDriverWait waitButtonDrafts1 = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitButtonDrafts1.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[contains(@class, 'nav__item') and contains(.,'Черновики')]"))).
+                By.xpath("//*[contains(@class, 'nav__item') and contains(.,'?????????')]"))).
 
     click();
 
     WebDriverWait waitDraftsEmails2 = new WebDriverWait(driver, Duration.ofSeconds(50));
-        waitDraftsEmails2.until(ExpectedConditions.titleIs("Черновики - Почта Mail.ru"));
+        waitDraftsEmails2.until(ExpectedConditions.titleIs("????????? - ????? Mail.ru"));
 
-    //подсчитываю количество писем в черновиках.
+    //??????????? ?????????? ????? ? ??????????.
     List<WebElement> drafts1 = driver.findElements(By
             .xpath("//*[@id='app-canvas']//div[@class='llc__content']"));
 
-    //помещаю в переменную типа int, вывожу кол-во писем после сохранения черновика.
+    //??????? ? ?????????? ???? int, ?????? ???-?? ????? ????? ?????????? ?????????.
     int numberOfLetterAfterSave = drafts1.size();
-    //System.out.println(numberOfLetterAfterSave + " - количество писем после сохранения в папке Черновики");
+    //System.out.println(numberOfLetterAfterSave + " - ?????????? ????? ????? ?????????? ? ????? ?????????");
     int myLetter = 1;
 
-    //Проверяю, что черновиков стало больше на 1
+    //????????, ??? ?????????? ????? ?????? ?? 1
         Assertions.assertThat(numberOfLetterAfterSave -myLetter).
 
     isEqualTo(numberOfLetterToSave);
 
-    //Перехожу в свое письмо в черновиках.
+    //???????? ? ???? ?????? ? ??????????.
     WebDriverWait waitMyDraft = new WebDriverWait(driver, Duration.ofSeconds(20));
         waitMyDraft.until(ExpectedConditions.elementToBeClickable(By
                 .xpath(
@@ -218,9 +252,9 @@ public class OpenMailTestIT extends BaseMailTest {
 
     click();
 
-    ///проверяю соответствие полей.
+    ///???????? ???????????? ?????.
 
-    //нахожу поле "Кому" и проверяю заполнение.
+    //?????? ???? "????" ? ???????? ??????????.
     WebDriverWait waitRecipient = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitRecipient.until(ExpectedConditions.visibilityOfElementLocated(By
                 .xpath("//div[@class='compose-app__compose']//input[@type='text']")));
@@ -229,7 +263,7 @@ public class OpenMailTestIT extends BaseMailTest {
 
     isEqualTo("lvluptestqa@gmail.com");
 
-    //нахожу поле "Тема" и проверяю заполнение.
+    //?????? ???? "????" ? ???????? ??????????.
     WebDriverWait waitTopic = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitTopic.until(ExpectedConditions.visibilityOfElementLocated(By
                 .xpath("//div[@class='compose-app__compose']//input[@name='Subject']")));
@@ -238,7 +272,7 @@ public class OpenMailTestIT extends BaseMailTest {
 
     isEqualTo("New");
 
-    //нахожу поле "Текст" и проверяю заполнение.
+    //?????? ???? "?????" ? ???????? ??????????.
     WebDriverWait waitBody = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitBody.until(ExpectedConditions.visibilityOfElementLocated(By
                 .xpath("//div[@class='compose-app__compose']//div[@role='textbox']")));
@@ -247,7 +281,7 @@ public class OpenMailTestIT extends BaseMailTest {
 
     isEqualTo("Hello,world!");
 
-    //Нажимаю на кнопку отправить.
+    //??????? ?? ?????? ?????????.
     WebDriverWait waitButtonSend = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitButtonSend.until(ExpectedConditions.elementToBeClickable(By
                 .xpath(
@@ -256,7 +290,7 @@ public class OpenMailTestIT extends BaseMailTest {
 
     click();
 
-    //закрываю всплывашку
+    //???????? ??????????
     WebDriverWait waitButtonClose = new WebDriverWait(driver, Duration.ofSeconds(10));
         waitButtonClose.until(ExpectedConditions.elementToBeClickable(By
                 .xpath(
@@ -266,60 +300,60 @@ public class OpenMailTestIT extends BaseMailTest {
 
     click();
 
-    //перехожу в черновики
+    //???????? ? ?????????
     WebDriverWait waitDrafts1 = new WebDriverWait(driver, Duration.ofSeconds(30));
         waitDrafts1.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[contains(@class, 'nav__item') and contains(.,'Черновики')]"))).
+                By.xpath("//*[contains(@class, 'nav__item') and contains(.,'?????????')]"))).
 
     click();
 
     WebDriverWait waitDrafts2 = new WebDriverWait(driver, Duration.ofSeconds(30));
         waitDrafts2.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[contains(@class, 'nav__item') and contains(.,'Черновики')]"))).
+                By.xpath("//*[contains(@class, 'nav__item') and contains(.,'?????????')]"))).
 
     click();
 
 
     WebDriverWait waitDraftsEmails4 = new WebDriverWait(driver, Duration.ofSeconds(100));
-        waitDraftsEmails4.until(ExpectedConditions.titleIs("Черновики - Почта Mail.ru"));
+        waitDraftsEmails4.until(ExpectedConditions.titleIs("????????? - ????? Mail.ru"));
 
 
     List<WebElement> drafts2 = driver.findElements(By
             .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
 
-    //помещаю в переменную типа int, вывожу кол-во писем после сохранения черновика.
+    //??????? ? ?????????? ???? int, ?????? ???-?? ????? ????? ?????????? ?????????.
     int numberOfLetterAfterSend = drafts2.size();
-    //System.out.println(numberOfLetterAfterSend + " - количество писем после отправки в папке Черновики");
-    //проверяю, что письмо исчезло из Черновиков
+    //System.out.println(numberOfLetterAfterSend + " - ?????????? ????? ????? ???????? ? ????? ?????????");
+    //????????, ??? ?????? ??????? ?? ??????????
         Assertions.assertThat(numberOfLetterAfterSend).
 
     isEqualTo(numberOfLetterToSave);
 
-    //перехожу в Отправленные
+    //???????? ? ????????????
 
     WebDriverWait waitSendEmails1 = new WebDriverWait(driver, Duration.ofSeconds(50));
         waitSendEmails1.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[contains(@class, 'nav__item') and contains(.,'Отправленные')]"))).
+                By.xpath("//*[contains(@class, 'nav__item') and contains(.,'????????????')]"))).
 
     click();
 
-    //считаю количество писем после отправки
+    //?????? ?????????? ????? ????? ????????
     WebDriverWait waitSendingEmails4 = new WebDriverWait(driver, Duration.ofSeconds(80));
-        waitSendingEmails4.until(ExpectedConditions.titleIs("Отправленные - Почта Mail.ru"));
+        waitSendingEmails4.until(ExpectedConditions.titleIs("???????????? - ????? Mail.ru"));
     List<WebElement> sendMails = driver.findElements(By
             .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
 
-    //помещаю в переменную типа int, вывожу кол-во писем.
+    //??????? ? ?????????? ???? int, ?????? ???-?? ?????.
     int numberOfLetterSend = sendMails.size();
-    //System.out.println(numberOfLetterSend + " - количество писем после отправки в папке Отправленные");
+    //System.out.println(numberOfLetterSend + " - ?????????? ????? ????? ???????? ? ????? ????????????");
     int mySendLetter = 1;
 
-    //Проверяю, что в Отправленных стало больше на 1
+    //????????, ??? ? ???????????? ????? ?????? ?? 1
         Assertions.assertThat(numberOfLettersSend +mySendLetter).
 
     isEqualTo(numberOfLetterSend);
 
-    //выхожу из почты
+    //?????? ?? ?????
     WebDriverWait waitProfile = new WebDriverWait(driver, Duration.ofSeconds(20));
         waitProfile.until(ExpectedConditions.elementToBeClickable(
                 By.xpath("//*[@id='ph-whiteline']//div[@data-testid='whiteline-account']")))

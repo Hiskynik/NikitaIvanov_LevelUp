@@ -3,67 +3,57 @@ package ru.levelp.at.homework4.pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
 
 
-public class IndexPageEmail {
-
+public class IndexPageEmail extends BasePage {
     @FindBy(xpath = "//*[@id='app-canvas']//span[@class='compose-button__wrapper']")
-    private WebElement NewLetterButton;
+    private WebElement newLetterButton;
     @FindBy(xpath = "//*[@class = 'sidebar__header']//a[@title = 'Все папки']")
-    private WebElement AllFoldersButton;
+    private WebElement allFoldersButton;
     @FindBy(xpath = "//*[contains(@class, 'nav__item') and contains(.,'Входящие')]")
-    private WebElement IncomingButton;
+    private WebElement incomingButton;
     @FindBy(xpath = "//*[contains(@class, 'nav__item') and contains(.,'Отправленные')]")
-    private WebElement SentButton;
+    private WebElement sentButton;
     @FindBy(xpath = "//*[contains(@class, 'nav__item') and contains(.,'Черновики')]")
-    private WebElement DraftsButton;
+    private WebElement draftsButton;
     @FindBy(xpath = "//*[@id='sideBarContent']//a[@data-folder-link-id='500002']")
-    private WebElement BasketButton;
+    private WebElement basketButton;
     @FindBy(xpath = "//*[@id='ph-whiteline']//div[@data-testid='whiteline-account']")
-    private WebElement ProfileButton;
+    private WebElement profileButton;
 
-
-    private final WebDriver driver;
-    private final WebDriverWait wait;
 
 
     public IndexPageEmail(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        PageFactory.initElements(driver, this);
+        super(driver);
     }
 
     //    driver.switchTo().defaultContent(); эта конструкция нужна здесь???
     public void clickNewLetterButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(NewLetterButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(newLetterButton)).click();
     }
 
     public void clickAllFoldersButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(AllFoldersButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(allFoldersButton)).click();
     }
 
     public void clickIncomingButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(IncomingButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(incomingButton)).click();
     }
 
     public void clickSentButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(SentButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(sentButton)).click();
     }
 
     public void clickDraftsButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(DraftsButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(draftsButton)).click();
     }
 
     public void clickBasketButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(BasketButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(basketButton)).click();
     }
 
     public void clickProfileButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(ProfileButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(profileButton)).click();
     }
 }
