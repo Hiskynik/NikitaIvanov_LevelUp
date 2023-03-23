@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ru.levelp.at.homework4.pages.*;
 
 import java.io.IOException;
+import java.sql.Driver;
 import java.time.Duration;
 import java.util.List;
 import java.util.Properties;
