@@ -28,7 +28,6 @@ public class IndexPageEmail extends BasePage {
         super(driver);
     }
 
-    //    driver.switchTo().defaultContent(); эта конструкция нужна здесь???
     public void clickNewLetterButton() {
         wait.until(ExpectedConditions.elementToBeClickable(newLetterButton)).click();
     }
