@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Is Happy Suite Positive">
+
+    <test name="Positive test">
+        <classes>
+            <class name="ru.levelp.at.homework2.hooks.suite.BeforeAfterSuiteHookIsHappyPositiveTest"/>
+        </classes>
+    </test>
+
+</suite>
