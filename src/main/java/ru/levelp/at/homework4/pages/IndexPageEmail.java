@@ -38,7 +38,6 @@ public class IndexPageEmail {
         PageFactory.initElements(driver, this);
     }
 
-    //    driver.switchTo().defaultContent(); эта конструкция нужна здесь???
     public void clickNewLetterButton() {
         wait.until(ExpectedConditions.elementToBeClickable(NewLetterButton)).click();
     }

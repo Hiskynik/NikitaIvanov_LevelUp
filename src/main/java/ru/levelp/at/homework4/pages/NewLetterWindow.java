@@ -17,9 +17,12 @@ public class NewLetterWindow extends BasePage {
     private WebElement sendButton;
     @FindBy(xpath = "//div[@class='compose-app__compose']//button[@type='button']")
     private WebElement saveButton;
-    @FindBy(xpath = "//div[@class ='compose-collapsed__item']"
-            + "//span[@class ='button2__wrapper button2__wrapper_centered']")
-    private WebElement closeButton;
+    @FindBy(xpath = "//div[@class='compose-collapsed']//span[@class='button2__ico']")
+
+    private WebElement closeButtonAfterSave;
+
+    @FindBy(xpath = "//div[@class='layer-window__block']//span[@class='button2__wrapper button2__wrapper_centered']")
+    private WebElement closeButtonAfterSending;
 
     public NewLetterWindow(WebDriver driver) {
         super(driver);
@@ -45,8 +48,13 @@ public class NewLetterWindow extends BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(saveButton)).click();
     }
 
-    public void clickCloseButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(closeButton)).click();
+    public void clickCloseButtonAfterSave() {
+        wait.until(ExpectedConditions.elementToBeClickable(closeButtonAfterSave)).click();
+
+    }
+
+    public void clickCloseButtonAfterSending() {
+        wait.until(ExpectedConditions.elementToBeClickable(closeButtonAfterSending)).click();
     }
 }
 

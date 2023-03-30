@@ -14,12 +14,6 @@ class BaseMailTest {
     private static final String mail = "https://mail.ru";
     protected WebDriver driver;
 
-
-    @AfterEach
-    void tearDown() {
-
-    }
-
     @BeforeEach
     void setUp() throws IOException {
         ChromeOptions options = new ChromeOptions();
@@ -29,5 +23,10 @@ class BaseMailTest {
         driver.navigate().to(mail);
 
 
-        }
     }
+
+    @AfterEach
+    void tearDown() {
+        driver.quit();
+    }
+}
