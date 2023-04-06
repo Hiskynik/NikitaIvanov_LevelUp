@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
+
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.levelp.at</groupId>
@@ -14,6 +16,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+
         <checkstyle.version>10.3.3</checkstyle.version>
 
         <maven-checkstyle-plugin.version>3.2.0</maven-checkstyle-plugin.version>
@@ -21,6 +24,8 @@
         <annotations.version>3.2.1</annotations.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-io.version>2.11.0</commons-io.version>
+
+
         <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
@@ -30,18 +35,25 @@
         <junit-jupiter.version>5.9.2</junit-jupiter.version>
         <selenium-java.version>4.8.1</selenium-java.version>
         <assertj.version>3.24.2</assertj.version>
+
+        <maven-failsafe-plugin.version>3.0.0-M9</maven-failsafe-plugin.version>
+        <junit-platform-suite-engine.version>1.9.2</junit-platform-suite-engine.version>
     </properties>
 
     <profiles>
 
         <profile>
-        <id>suiteForAllTests-class</id>
-        <activation>
-            <activeByDefault>true</activeByDefault>
-        </activation>
-        <properties>
-            <class.name> **/*suiteForAllTests.class</class.name>
-        </properties>
+            <id>suiteForAllTests-class</id>
+
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+
+                <class.name>**/*suiteForAllTests.class</class.name>
+            </properties>
+    </properties>
+    
         </profile>
     </profiles>
     <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
@@ -60,11 +72,45 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.testng/testng -->
-        <dependency>
+
+        <!--<dependency>
+
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
             <scope>test</scope>
+        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-suite -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-engine</artifactId>
+            <version>${junit-platform-suite-engine.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium-java.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
@@ -114,6 +160,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
+
                     <configLocation>
                         <!--  pay attention to use exact url for checkstyle plugin ruleset  -->
                         https://raw.githubusercontent.com/khda91/leveup-code-checkers-configurations/main/checkstyle/checkstyle.xml
@@ -138,6 +185,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
+
             </plugin>
 
 
@@ -145,33 +193,35 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M9</version>
-            <!--    <scope>test</scope> -->
-            <configuration>
-                <includes>
-                    <!--suppress UnresolvedMavenProperty -->
-                    <include>${project.class.name}</include>
-                </includes>
-            </configuration>
-            <executions>
-                <execution>
-                    <id>integration-test</id>
-                    <phase>integration-test</phase>
-                    <goals>
-                        <goal>integration-test</goal>
-                    </goals>
-                </execution>
-                <execution>
-                    <id>verify</id>
-                    <phase>verify</phase>
-                    <goals>
-                        <goal>verify</goal>
-                    </goals>
-                </execution>
-            </executions>
+                <version>${maven-failsafe-plugin.version}</version>
+                <!--    <scope>test</scope> -->
+                <configuration>
+                    <includes>
+                        <!--suppress UnresolvedMavenProperty -->
+                        <include>${project.class.name}</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
+
+
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>${maven-clean-plugin.version}</version>
