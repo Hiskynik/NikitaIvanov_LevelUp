@@ -21,46 +21,28 @@
         <annotations.version>3.2.1</annotations.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-io.version>2.11.0</commons-io.version>
-     <!--   <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
+        <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-clean-plugin.version>2.5</maven-clean-plugin.version>
-        <maven-install-plugin.version>2.4</maven-install-plugin.version> -->
+        <maven-install-plugin.version>2.4</maven-install-plugin.version>
         <testng.version>7.7.1</testng.version>
+        <junit-jupiter.version>5.9.2</junit-jupiter.version>
+        <selenium-java.version>4.8.1</selenium-java.version>
+        <assertj.version>3.24.2</assertj.version>
     </properties>
 
     <profiles>
-        <profile>
-            <id>negative_suite</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <suite.file>
-                    ${project.basedir}/src/main/resources/ru.levelp.at.homework2.suite/NegativeSuite.xml
-                </suite.file>
-            </properties>
-
-        </profile>
 
         <profile>
-            <id>positive_suite</id>
-            <properties>
-                <suite.file>
-                    ${project.basedir}/src/main/resources/ru.levelp.at.homework2.suite/PositiveSuite.xml
-                </suite.file>
-            </properties>
+        <id>suiteForAllTests-class</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+            <class.name> **/*suiteForAllTests.class</class.name>
+        </properties>
         </profile>
-
-        <profile>
-            <id>all_suite</id>
-            <properties>
-                <suite.file>
-                    ${project.basedir}/src/main/resources/ru.levelp.at.homework2.suite/IsHappySuite.xml
-                </suite.file>
-            </properties>
-        </profile>
-
     </profiles>
     <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
     <dependencies>
@@ -82,6 +64,37 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-suite -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-engine</artifactId>
+            <version>1.9.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium-java.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -125,13 +138,40 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>${suite.file}</suiteXmlFile>
-                    </suiteXmlFiles>
-                </configuration>
             </plugin>
-  <!--          <plugin>
+
+
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-failsafe-plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M9</version>
+            <!--    <scope>test</scope> -->
+            <configuration>
+                <includes>
+                    <!--suppress UnresolvedMavenProperty -->
+                    <include>${project.class.name}</include>
+                </includes>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>integration-test</id>
+                    <phase>integration-test</phase>
+                    <goals>
+                        <goal>integration-test</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>verify</id>
+                    <phase>verify</phase>
+                    <goals>
+                        <goal>verify</goal>
+                    </goals>
+                </execution>
+            </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>${maven-clean-plugin.version}</version>
@@ -159,7 +199,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
                 <version>${maven-install-plugin.version}</version>
-            </plugin> -->
+            </plugin>
 
         </plugins>
     </build>
