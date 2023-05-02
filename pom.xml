@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.levelp.at</groupId>
@@ -13,6 +15,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <checkstyle.version>10.3.3</checkstyle.version>
 
@@ -48,7 +51,6 @@
             </properties>
         </profile>
     </profiles>
-
     <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
     <dependencies>
         <dependency>
@@ -65,7 +67,9 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.testng/testng -->
+
         <!--<dependency>
+
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
@@ -101,6 +105,7 @@
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
             <scope>test</scope>
+
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
@@ -150,6 +155,7 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>2.15.0-rc2</version>
+
         </dependency>
 
     </dependencies>
@@ -193,6 +199,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
+
+
             </plugin>
 
 
@@ -201,9 +209,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-failsafe-plugin.version}</version>
+
                 <configuration>
                     <includes>
                         <include>**/*SuiteTest.class</include>
+
                     </includes>
                 </configuration>
                 <executions>
@@ -225,6 +235,8 @@
             </plugin>
 
             <plugin>
+
+
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>${maven-clean-plugin.version}</version>
@@ -256,5 +268,4 @@
 
         </plugins>
     </build>
-
 </project>
