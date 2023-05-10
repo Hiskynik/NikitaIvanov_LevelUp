@@ -1,5 +1,6 @@
-package ru.levelp.at.homework4.pages;
+package ru.levelp.at.homework7;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -12,8 +13,8 @@ import java.time.Duration;
 
 public class ProfilePanel {
 
-    @FindBy(xpath = "//div[@class='ph-accounts svelte-1labzyv']//div[@data-testid='whiteline-account-exit']")
-    private WebElement ExitButton;
+    @FindBy(xpath = "//div[@data-click-counter='75068944']")
+    private WebElement exitButton;
 
 
     private final WebDriver driver;
@@ -22,22 +23,18 @@ public class ProfilePanel {
 
     public ProfilePanel(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver,
+                Duration.ofSeconds(10));
         PageFactory.initElements(driver, this);
     }
 
-
+    @Step("Выходим из почты")
     public void clickExitButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(ExitButton)).click();
+        wait.until(ExpectedConditions
+                .elementToBeClickable(exitButton)).click();
     }
 
-
+    public WebDriver getDriver() {
+        return driver;
+    }
 }
-
-
-/*
-    public void PageLoaded() {
-        super.wait(PageLoaded(index.page.title));
-
-
- */
