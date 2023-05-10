@@ -1,16 +1,24 @@
-package ru.levelp.at.homework4;
+package ru.levelp.at.homework7;
 
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import ru.levelp.at.homework4.pages.*;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
+import static io.qameta.allure.Allure.step;
+
+@Epic("Epic 2")
+@Feature("Feature 2")
 public class OpenMailTopicPOTestIT extends BaseMailTest {
 
     private Properties properties;
@@ -22,7 +30,7 @@ public class OpenMailTopicPOTestIT extends BaseMailTest {
     private TestPage testPage;
     private SentPage sentPage;
 
-    @Override
+
     @BeforeEach
     public void setUp() throws IOException {
         super.setUp();
@@ -36,22 +44,33 @@ public class OpenMailTopicPOTestIT extends BaseMailTest {
         sentPage = new SentPage(driver);
         properties = new Properties();
         try {
-            properties.load(this.getClass().getClassLoader().getResourceAsStream("app.properties"));
+            properties.load(this
+                    .getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("app.properties"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    @Story("Story 2")
+    @DisplayName("Письмо с темой Test и работа с ним")
     @Test
     @Tag("topic")
     public void openMailWebsite() {
 
-        var emailname = properties.getProperty("email.name");
-        var emailpassword = properties.getProperty("email.password");
-        var indexpagetitle = properties.getProperty("index.page.title");
-        var recipient = properties.getProperty("recipient.for.mail.topic.test");
-        var topic = properties.getProperty("topic.for.mail.topic.test");
-        var body = properties.getProperty("body.for.mail.topic.test");
+        var emailname = properties
+                .getProperty("email.name");
+        var emailpassword = properties
+                .getProperty("email.password");
+        var indexpagetitle = properties
+                .getProperty("index.page.title");
+        var recipient = properties
+                .getProperty("recipient.for.mail.topic.test");
+        var topic = properties
+                .getProperty("topic.for.mail.topic.test");
+        var body = properties
+                .getProperty("body.for.mail.topic.test");
 
         //Вхожу в почту
         loginPage.open();
@@ -62,23 +81,29 @@ public class OpenMailTopicPOTestIT extends BaseMailTest {
         loginPage.fillPasswordTextField(emailpassword);
         loginPage.clickEntranceButton();
         var title = driver.getTitle();
-        Assertions.assertThat(title).isEqualTo(indexpagetitle);
+        Assertions.assertThat(title)
+                .isEqualTo(indexpagetitle);
         //перехожу во все папки, далее в папку Тест
         indexPageEmail.clickAllFoldersButton();
         allFoldersPanel.clickTestButton();
-        testPage.getTestTitleText();
+        testPage.waitForPageLoaded();
         List<WebElement> mails = driver.findElements(By
-                .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
+                .xpath("//*[@id='app-canvas']"
+                        + "//div[@class='llc__background']"));
         //помещаю в переменную типа int, вывожу кол-во писем.
         final int topicTestMails = mails.size();
-        System.out.println(topicTestMails + " - до сохранения в папку Тест");
+        System.out.println(topicTestMails
+                + " - до сохранения в папку Тест");
         //перехожу в отправленные
         indexPageEmail.clickSentButton();
-        sentPage.getSentTitleText();
+        sentPage.waitForPageLoaded();
+        indexPageEmail.clickSentButton();
         List<WebElement> sendMails1 = driver.findElements(By
-                .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
+                .xpath("//*[@id='app-canvas']"
+                        + "//div[@class='llc__background']"));
         final int numberOfLettersSend = sendMails1.size();
-        System.out.println(numberOfLettersSend + " - отправленных до");
+        System.out.println(numberOfLettersSend
+                + " - отправленных до");
         //пишу новое письмо
         indexPageEmail.clickNewLetterButton();
         newLetterWindow.fillRecipientTextField(recipient);
@@ -87,25 +112,30 @@ public class OpenMailTopicPOTestIT extends BaseMailTest {
         newLetterWindow.clickSendButton();
         newLetterWindow.clickCloseButtonAfterSending();
         //перехожу в отправленные
-        //indexPageEmail.clickSentButton();
         indexPageEmail.clickSentButton();
-        sentPage.getSentTitleText();
+        sentPage.waitForPageLoaded();
+        indexPageEmail.clickSentButton();
+        indexPageEmail.clickSentButton();
         List<WebElement> sendMails2 = driver.findElements(By
-                .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
+                .xpath("//*[@id='app-canvas']"
+                        + "//div[@class='llc__background']"));
         final int numberOfLettersSend1 = sendMails2.size();
-        System.out.println(numberOfLettersSend1 + " - отправленных после");
+        System.out.println(numberOfLettersSend1
+                + " - отправленных после");
         int mySendLetter = 1;
         //проверка, что стало на 1 больше
         Assertions.assertThat(numberOfLettersSend + mySendLetter)
                 .isEqualTo(numberOfLettersSend1);
         indexPageEmail.clickAllFoldersButton();
         allFoldersPanel.clickTestButton();
-        testPage.getTestTitleText();
+        testPage.waitForPageLoaded();
         List<WebElement> mails1 = driver.findElements(By
-                .xpath("//*[@id='app-canvas']//div[@class='llc__background']"));
+                .xpath("//*[@id='app-canvas']"
+                        + "//div[@class='llc__background']"));
         //помещаю в переменную типа int, вывожу кол-во писем.
         final int topicTestMails1 = mails1.size();
-        System.out.println(topicTestMails1 + " - после сохранения в папку Тест");
+        System.out.println(topicTestMails1
+                + " - после сохранения в папку Тест");
         var mySendTestLetter = 1;
         //Проверяю, что в папке Тест стало больше на 1
         Assertions.assertThat(topicTestMails + mySendTestLetter)
@@ -113,14 +143,16 @@ public class OpenMailTopicPOTestIT extends BaseMailTest {
         //Открываю свое письмо в папке Тест
         testPage.clickMyTestMail();
         //Проверяю заполнение письма
-        var actualRecipient = testPage.getRecipientTestText();
-        Assertions.assertThat(actualRecipient).isEqualTo(recipient);
+        step("Проверка заполнения письма в папке Тест", () -> {
+            var actualRecipient = testPage.getRecipientTestText();
+            Assertions.assertThat(actualRecipient).isEqualTo(recipient);
 
-        var actualTopic = testPage.getTopicTestText();
-        Assertions.assertThat(actualTopic).isEqualTo(topic);
+            var actualTopic = testPage.getTopicTestText();
+            Assertions.assertThat(actualTopic).isEqualTo(topic);
 
-        var actualBody = testPage.getBodyTestText();
-        Assertions.assertThat(actualBody).contains(body);
+            var actualBody = testPage.getBodyTestText();
+            Assertions.assertThat(actualBody).contains(body);
+        });
         //Выхожу из почты
         indexPageEmail.clickProfileButton();
         profilePanel.clickExitButton();
