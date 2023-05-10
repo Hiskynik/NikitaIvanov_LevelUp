@@ -16,7 +16,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <checkstyle.version>10.3.3</checkstyle.version>
 
         <maven-checkstyle-plugin.version>3.2.0</maven-checkstyle-plugin.version>
@@ -24,8 +24,6 @@
         <annotations.version>3.2.1</annotations.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-io.version>2.11.0</commons-io.version>
-
-
         <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
@@ -35,25 +33,22 @@
         <junit-jupiter.version>5.9.2</junit-jupiter.version>
         <selenium-java.version>4.8.1</selenium-java.version>
         <assertj.version>3.24.2</assertj.version>
-
         <maven-failsafe-plugin.version>3.0.0-M9</maven-failsafe-plugin.version>
         <junit-platform-suite-engine.version>1.9.2</junit-platform-suite-engine.version>
+        <rest-assured.version>5.3.0</rest-assured.version>
+        <lombok.version>1.18.26</lombok.version>
+        <owner.version>1.0.12</owner.version>
+        <jackson-databind.version>2.15.0-rc2</jackson-databind.version>
+        <javafaker.version>1.0.2</javafaker.version>
+        <jsonpath_2.12.version>0.7.0</jsonpath_2.12.version>
     </properties>
 
     <profiles>
-
         <profile>
-            <id>suiteForAllTests-class</id>
-
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+            <id>suite-class</id>
             <properties>
-
-                <class.name>**/*suiteForAllTests.class</class.name>
+                <class.name>**/SuiteTest.class</class.name>
             </properties>
-    </properties>
-    
         </profile>
     </profiles>
     <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
@@ -113,35 +108,54 @@
 
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
+        <!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit-jupiter.version}</version>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${rest-assured.version}</version>
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-suite -->
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-suite-engine</artifactId>
-            <version>1.9.2</version>
-            <scope>test</scope>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+        <!-- https://mvnrepository.com/artifact/org.aeonbits.owner/owner -->
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>${selenium-java.version}</version>
+            <groupId>org.aeonbits.owner</groupId>
+            <artifactId>owner</artifactId>
+            <version>${owner.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>${assertj.version}</version>
-            <scope>test</scope>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-databind.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>${javafaker.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.gatling/jsonpath -->
+        <dependency>
+            <groupId>io.gatling</groupId>
+            <artifactId>jsonpath_2.12</artifactId>
+            <version>${jsonpath_2.12.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.15.0-rc2</version>
+
         </dependency>
 
     </dependencies>
@@ -186,6 +200,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
 
+
             </plugin>
 
 
@@ -194,11 +209,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-failsafe-plugin.version}</version>
-                <!--    <scope>test</scope> -->
+
                 <configuration>
                     <includes>
-                        <!--suppress UnresolvedMavenProperty -->
-                        <include>${project.class.name}</include>
+                        <include>**/*SuiteTest.class</include>
+
                     </includes>
                 </configuration>
                 <executions>
@@ -253,5 +268,4 @@
 
         </plugins>
     </build>
-
 </project>
