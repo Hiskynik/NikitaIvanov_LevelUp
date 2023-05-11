@@ -1,8 +1,13 @@
 package ru.levelp.at.homework7;
 
+import static io.qameta.allure.Allure.step;
+
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import java.io.IOException;
+import java.util.List;
+import java.util.Properties;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,12 +15,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Properties;
-
-import static io.qameta.allure.Allure.step;
 
 @Epic("Epic 2")
 @Feature("Feature 2")
@@ -59,17 +58,17 @@ public class OpenMailTopicPOTestIT extends BaseMailTest {
     @Tag("topic")
     public void openMailWebsite() {
 
-        var emailname = properties
+        final var emailname = properties
                 .getProperty("email.name");
-        var emailpassword = properties
+        final var emailpassword = properties
                 .getProperty("email.password");
-        var indexpagetitle = properties
+        final var indexpagetitle = properties
                 .getProperty("index.page.title");
-        var recipient = properties
+        final var recipient = properties
                 .getProperty("recipient.for.mail.topic.test");
-        var topic = properties
+        final var topic = properties
                 .getProperty("topic.for.mail.topic.test");
-        var body = properties
+        final var body = properties
                 .getProperty("body.for.mail.topic.test");
 
         //Вхожу в почту

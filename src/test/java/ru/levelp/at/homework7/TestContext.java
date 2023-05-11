@@ -1,22 +1,19 @@
 package ru.levelp.at.homework7;
 
-import org.openqa.selenium.WebDriver;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.openqa.selenium.WebDriver;
 
 public final class TestContext {
 
     private static TestContext instance;
     private final Map<String, WebDriver> context;
 
-
     private TestContext() {
         this.context = new HashMap<>();
     }
 
-    public void addObject(final String key,
-                          final WebDriver o) {
+    public void addObject(final String key, final WebDriver o) {
         context.put(key, o);
     }
 
@@ -25,7 +22,6 @@ public final class TestContext {
     }
 
     public static void clear() {
-
         instance = null;
     }
 
@@ -33,7 +29,6 @@ public final class TestContext {
         if (instance == null) {
             instance = new TestContext();
         }
-
         return instance;
     }
 }
