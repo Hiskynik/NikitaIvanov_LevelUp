@@ -17,27 +17,22 @@ public class NewLetterWindow extends BasePage {
             "//input[@name='Subject']")
     private WebElement topicTextField;
     @FindBy(xpath = "//div[@class='compose-app__compose']"
-            +
-            "//div[@role='textbox']")
+            + "//div[@role='textbox']")
     private WebElement bodyTextField;
     @FindBy(xpath = "//div[@class='compose-app__compose']"
-            +
-            "//button[@data-test-id='send']")
+            + "//button[@data-test-id='send']")
     private WebElement sendButton;
     @FindBy(xpath = "//div[@class='compose-app__compose']"
-            +
-            "//button[@type='button']")
+            + "//button[@type='button']")
     private WebElement saveButton;
     @FindBy(xpath = "//div[@class='compose-collapsed']"
-            +
-            "//span[@class='button2__ico']")
+            + "//span[@class='button2__ico']")
 
     private WebElement closeButtonAfterSave;
 
     @FindBy(xpath = "//div[@class='layer-window__block']"
             + "//span[@class='button2__wrapper "
-            +
-            "button2__wrapper_centered']")
+            + "button2__wrapper_centered']")
     private WebElement closeButtonAfterSending;
 
     public NewLetterWindow(WebDriver driver) {

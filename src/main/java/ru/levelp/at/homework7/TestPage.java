@@ -30,20 +30,20 @@ public class TestPage extends BasePage {
 
     @Step("Получаем значение в поле Кому в папке Тест")
     public String getRecipientTestText() {
-        return wait.until(ExpectedConditions.
-                visibilityOf(recipientTest)).getAttribute("title");
+        return wait.until(ExpectedConditions
+                .visibilityOf(recipientTest)).getAttribute("title");
     }
 
     @Step("Получаем значение в поле Тема в папке Тест")
     public String getTopicTestText() {
-        return wait.until(ExpectedConditions.
-                visibilityOf(topicTest)).getAttribute("textContent");
+        return wait.until(ExpectedConditions
+                .visibilityOf(topicTest)).getAttribute("textContent");
     }
 
     @Step("Получаем значение в поле Тело в папке Тест")
     public String getBodyTestText() {
-        return wait.until(ExpectedConditions.
-                visibilityOf(bodyTest)).getAttribute("innerText");
+        return wait.until(ExpectedConditions
+                .visibilityOf(bodyTest)).getAttribute("innerText");
     }
 
 

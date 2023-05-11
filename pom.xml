@@ -35,6 +35,7 @@
         <allure-junit5.version>2.22.0</allure-junit5.version>
         <aspectj.version>1.9.19</aspectj.version>
         <allure-maven.version>2.12.0</allure-maven.version>
+        <allure-java-commons.version>2.22.0</allure-java-commons.version>
     </properties>
 
     <profiles>
@@ -119,7 +120,7 @@
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-java-commons</artifactId>
-            <version>2.22.0</version>
+            <version>${allure-java-commons.version}</version>
         </dependency>
 
     </dependencies>
@@ -140,6 +141,7 @@
                 <configuration>
 
                     <configLocation>
+                        https://raw.githubusercontent.com/khda91/leveup-code-checkers-configurations/main/checkstyle/checkstyle.xml
                         <!--  pay attention to use exact url for checkstyle plugin ruleset  -->
                     </configLocation>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
