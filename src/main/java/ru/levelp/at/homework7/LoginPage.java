@@ -25,7 +25,6 @@ public class LoginPage {
     @FindBy(xpath = "//*[contains(@class,'submit-button')]")
     private WebElement entranceButton;
 
-
     private static final String MAIL_URL = "https://mail.ru/";
     private final WebDriver driver;
     private final WebDriverWait wait;

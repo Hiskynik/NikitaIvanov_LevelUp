@@ -9,16 +9,13 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-
 public class ProfilePanel {
 
     @FindBy(xpath = "//div[@data-click-counter='75068944']")
     private WebElement exitButton;
 
-
     private final WebDriver driver;
     private final WebDriverWait wait;
-
 
     public ProfilePanel(WebDriver driver) {
         this.driver = driver;
