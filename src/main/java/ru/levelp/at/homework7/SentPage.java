@@ -2,7 +2,7 @@ package ru.levelp.at.homework7;
 
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
-
+//отправленные
 public class SentPage extends BasePage {
 
     public SentPage(WebDriver driver) {

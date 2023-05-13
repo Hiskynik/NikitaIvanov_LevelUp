@@ -50,7 +50,7 @@ public class FailAuthTestIT extends BaseMailTest {
 
 
     @Story("Story 4")
-    @DisplayName("Работа с черновиком")
+    @DisplayName("Ошибка при вводе пароля")
     @Test
     @Tag("fail")
     public void openMailWebsite() {

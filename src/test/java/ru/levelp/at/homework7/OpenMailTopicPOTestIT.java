@@ -51,7 +51,7 @@ public class OpenMailTopicPOTestIT extends BaseMailTest {
             throw new RuntimeException(e);
         }
     }
-
+//2
     @Story("Story 2")
     @DisplayName("Письмо с темой Test и работа с ним")
     @Test

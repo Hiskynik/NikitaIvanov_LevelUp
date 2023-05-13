@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-
+//вход
 public class LoginPage extends BasePage {
     @FindBy(xpath = "//*[contains(@class,'resplash-btn')]")
     private WebElement loginButton;
@@ -33,20 +33,17 @@ public class LoginPage extends BasePage {
     }
 
     @Step("Нажимаем кнопку логина")
-
     public void clickLoginButton() {
         wait.until(ExpectedConditions
                 .elementToBeClickable(loginButton)).click();
     }
 
     @Step("Переключаемся на фрейм")
-
     public void switchLoginFrame() {
         driver.switchTo().frame(frameElement);
     }
 
     @Step("Заполняем адрес почты")
-
     public void fillEmailTextField(final String email) {
         wait.until(ExpectedConditions
                 .visibilityOf(emailTextField)).sendKeys(email);

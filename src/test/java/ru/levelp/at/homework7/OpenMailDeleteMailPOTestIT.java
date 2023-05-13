@@ -50,7 +50,7 @@ public class OpenMailDeleteMailPOTestIT extends BaseMailTest {
             throw new RuntimeException(e);
         }
     }
-
+    //3
     @Story("Store 3")
     @DisplayName("Создание/удаление письма")
     @Test

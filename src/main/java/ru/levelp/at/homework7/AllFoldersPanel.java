@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-
+//все папки
 public class AllFoldersPanel extends BasePage {
 
     @FindBy(xpath = "//div[@class='sidebar__full fn-enter']"

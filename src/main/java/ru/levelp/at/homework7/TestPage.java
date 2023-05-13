@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-
+//в папке тест
 public class TestPage extends BasePage {
     @FindBy(xpath = "//*[contains(@class, "
             + "'ReactVirtualized__Grid__innerScrollContainer')]/a[1]")

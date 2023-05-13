@@ -9,7 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-
+//главная
 public class IndexPageEmail {
 
     @FindBy(xpath = "//*[@id='app-canvas']//span[@class='compose-button__wrapper']")

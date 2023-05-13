@@ -50,7 +50,7 @@ public class OpenMailPOTestIT extends BaseMailTest {
         }
     }
 
-
+//1
     @Story("Story 1")
     @DisplayName("Работа с черновиком")
     @Test

@@ -1,6 +1,5 @@
 package ru.levelp.at.homework7;
 
-import java.io.IOException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +9,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import ru.levelp.at.homework7.listener.AllureAttachmentCallback;
 import ru.levelp.at.homework7.listener.AllureAttachmentReport;
 
+import java.io.IOException;
+//Базовый тест
 @ExtendWith({AllureAttachmentReport.class, AllureAttachmentCallback.class})
 class BaseMailTest {
 
