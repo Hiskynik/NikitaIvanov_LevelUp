@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 
+//тест контекст
 public final class TestContext {
 
     private static TestContext instance;
