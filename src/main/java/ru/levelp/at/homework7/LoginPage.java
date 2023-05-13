@@ -1,17 +1,17 @@
 package ru.levelp.at.homework7;
 
+<<<<<<< HEAD:src/main/java/ru/levelp/at/homework7/LoginPage.java
 import io.qameta.allure.Step;
 import java.time.Duration;
+=======
+>>>>>>> parent of 49a5780 (Homework #7 (rebase #4)):src/main/java/ru/levelp/at/homework4/pages/LoginPage.java
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 
-
-public class LoginPage {
+public class LoginPage extends BasePage {
     @FindBy(xpath = "//*[contains(@class,'resplash-btn')]")
     private WebElement loginButton;
     @FindBy(xpath = "//*[contains(@class,'ag-popup__frame__layout__iframe')]")
@@ -26,13 +26,9 @@ public class LoginPage {
     private WebElement entranceButton;
 
     private static final String MAIL_URL = "https://mail.ru/";
-    private final WebDriver driver;
-    private final WebDriverWait wait;
 
     public LoginPage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        PageFactory.initElements(driver, this);
+        super(driver);
     }
 
     @Step("Открываем домашнюю страницу mail.ru")
@@ -53,11 +49,16 @@ public class LoginPage {
         driver.switchTo().frame(frameElement);
     }
 
+<<<<<<< HEAD:src/main/java/ru/levelp/at/homework7/LoginPage.java
     @Step("Заполняем адрес почты")
 
     public void fillEmailTextField(final String email) {
         wait.until(ExpectedConditions
                 .visibilityOf(emailTextField)).sendKeys(email);
+=======
+    public void fillEmailTextField(final String emailname) {
+        wait.until(ExpectedConditions.visibilityOf(emailTextField)).sendKeys(emailname);
+>>>>>>> parent of 49a5780 (Homework #7 (rebase #4)):src/main/java/ru/levelp/at/homework4/pages/LoginPage.java
     }
 
     @Step("Нажимаем кнопку пароля")
@@ -66,10 +67,15 @@ public class LoginPage {
                 .elementToBeClickable(passwordButton)).click();
     }
 
+<<<<<<< HEAD:src/main/java/ru/levelp/at/homework7/LoginPage.java
     @Step("Заполняем пароль")
     public void fillPasswordTextField(final String password) {
         wait.until(ExpectedConditions
                 .visibilityOf(passwordTextField)).sendKeys(password);
+=======
+    public void fillPasswordTextField(final String emailpassword) {
+        wait.until(ExpectedConditions.visibilityOf(passwordTextField)).sendKeys(emailpassword);
+>>>>>>> parent of 49a5780 (Homework #7 (rebase #4)):src/main/java/ru/levelp/at/homework4/pages/LoginPage.java
 
     }
 
