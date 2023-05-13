@@ -1,10 +1,6 @@
 package ru.levelp.at.homework7;
 
-<<<<<<< HEAD:src/main/java/ru/levelp/at/homework7/LoginPage.java
 import io.qameta.allure.Step;
-import java.time.Duration;
-=======
->>>>>>> parent of 49a5780 (Homework #7 (rebase #4)):src/main/java/ru/levelp/at/homework4/pages/LoginPage.java
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -49,16 +45,11 @@ public class LoginPage extends BasePage {
         driver.switchTo().frame(frameElement);
     }
 
-<<<<<<< HEAD:src/main/java/ru/levelp/at/homework7/LoginPage.java
     @Step("Заполняем адрес почты")
 
     public void fillEmailTextField(final String email) {
         wait.until(ExpectedConditions
                 .visibilityOf(emailTextField)).sendKeys(email);
-=======
-    public void fillEmailTextField(final String emailname) {
-        wait.until(ExpectedConditions.visibilityOf(emailTextField)).sendKeys(emailname);
->>>>>>> parent of 49a5780 (Homework #7 (rebase #4)):src/main/java/ru/levelp/at/homework4/pages/LoginPage.java
     }
 
     @Step("Нажимаем кнопку пароля")
@@ -67,15 +58,10 @@ public class LoginPage extends BasePage {
                 .elementToBeClickable(passwordButton)).click();
     }
 
-<<<<<<< HEAD:src/main/java/ru/levelp/at/homework7/LoginPage.java
     @Step("Заполняем пароль")
     public void fillPasswordTextField(final String password) {
         wait.until(ExpectedConditions
                 .visibilityOf(passwordTextField)).sendKeys(password);
-=======
-    public void fillPasswordTextField(final String emailpassword) {
-        wait.until(ExpectedConditions.visibilityOf(passwordTextField)).sendKeys(emailpassword);
->>>>>>> parent of 49a5780 (Homework #7 (rebase #4)):src/main/java/ru/levelp/at/homework4/pages/LoginPage.java
 
     }
 
