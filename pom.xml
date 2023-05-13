@@ -174,7 +174,7 @@
                 <version>${maven-failsafe-plugin.version}</version>
                 <!--    <scope>test</scope> -->
                 <configuration>
-                    <argLine>
+                    <argLine> <!--для работы степов-->
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
                     <includes>
